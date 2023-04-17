@@ -1,51 +1,50 @@
-# this app is made to as user questions about themselves to choose a careerpath
-# we are using flask
+#jazelle and Liz
 from flask import Flask, render_template, request, redirect, session
-import requests
 
 app = Flask(__name__)
+app.secret_key = "my_secret_key"
 
+users = {} 
 
+@app.route('/')
+def home():
+    return redirect('/login')
 
-@app.route("/")
-def index():
-    # Check if the user is logged in
-    if "username" in session:
-        # Render the mood page
-        return redirect("/mood")
-    else:
-        # Render the login page
-        return render_template("login.html")
-
-
-# Define the login page route
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        
-        username = request.form["username"]
-        password = request.form["password"]
-        
-        if username == "myusername" and password == "mypassword":
-        
-            session["username"] = username
-            # bk home page
-            return redirect("/")
-        else:
-        
-            return render_template("login.html", error="Invalid username or password")
-    else:
-        # Render the login page
-        return render_template("login.html")
-    
-@app.route("/signup", methods=["GET", "POST"])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == "POST":
-        
-        username = request.form["username"]
-        password = request.form["password"]
-       
-        return redirect("/login")
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username in users:
+            error = "Username already exists."
+            return render_template('signup.html', error=error)
+        users[username] = password
+        session['username'] = username
+        return redirect('/dashboard')
     else:
-        # Render
-        return render_template("signup.html")
+        return render_template('signup.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username not in users or users[username] != password:
+            error = "Incorrect username or password."
+            return render_template('login.html', error=error)
+        session['username'] = username
+        return redirect('/dashboard')
+    else:
+        return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if 'username' in session:
+        return render_template('dashboard.html', username=session['username'])
+    else:
+        return redirect('/login')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect('/login')
