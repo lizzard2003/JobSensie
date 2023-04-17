@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # this app is made to as user questions about themselves to choose a careerpath
 # we are using flask
 
@@ -58,6 +59,15 @@ app = Flask(__name__)
 app.secret_key = "my_secret_key"
 
 users = {} #dictionary to store user information (for this basic example)
+=======
+#jazelle and Liz
+from flask import Flask, render_template, request, redirect, session
+#hello
+app = Flask(__name__)
+app.secret_key = "my_secret_key"
+
+users = {} 
+>>>>>>> 57456f10179ca69749cf53578f5d3497f3b56f56
 
 @app.route('/')
 def home():
@@ -101,6 +111,7 @@ def dashboard():
 def logout():
     session.pop('username', None)
     return redirect('/login')
+<<<<<<< HEAD
 
 #sign up 
 <!DOCTYPE html>
@@ -167,3 +178,5 @@ dashboard.html
     <p><a href="/logout">Logout</a></p>
 </body>
 </html>
+=======
+>>>>>>> 57456f10179ca69749cf53578f5d3497f3b56f56
