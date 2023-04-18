@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # this app is made to as user questions about themselves to choose a careerpath
 # we are using flask
 
@@ -51,3 +52,131 @@ careers = traitify.career_matches(assessment.id)
 
 # Get multiple types of results from an assessment
 results = traitify.results(assessment.id, ["types", "traits", "blend"])
+
+from flask import Flask, render_template, request, redirect, session
+
+app = Flask(__name__)
+app.secret_key = "my_secret_key"
+
+users = {} #dictionary to store user information (for this basic example)
+=======
+#jazelle and Liz
+from flask import Flask, render_template, request, redirect, session
+#hello
+app = Flask(__name__)
+app.secret_key = "my_secret_key"
+
+users = {} 
+>>>>>>> 57456f10179ca69749cf53578f5d3497f3b56f56
+
+@app.route('/')
+def home():
+    return redirect('/login')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username in users:
+            error = "Username already exists."
+            return render_template('signup.html', error=error)
+        users[username] = password
+        session['username'] = username
+        return redirect('/dashboard')
+    else:
+        return render_template('signup.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username not in users or users[username] != password:
+            error = "Incorrect username or password."
+            return render_template('login.html', error=error)
+        session['username'] = username
+        return redirect('/dashboard')
+    else:
+        return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if 'username' in session:
+        return render_template('dashboard.html', username=session['username'])
+    else:
+        return redirect('/login')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect('/login')
+<<<<<<< HEAD
+
+#sign up 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign up</title>
+</head>
+<body>
+    <h1>Sign up</h1>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <form method="POST">
+        <label>Username:</label><br>
+        <input type="text" name="username"><br>
+        <label>Password:</label><br>
+        <input type="password" name="password"><br>
+        <input type="submit" value="Sign up">
+    </form>
+    <p>Already have an account? <a href="/login">Login</a></p>
+</body>
+</html>
+
+login html 
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <form method="POST">
+        <label>Username:</label><br>
+        <input type="text" name="username"><br>
+        <label>Password:</label><br>
+        <input type="password" name="password"><br>
+        <input type="submit" value="Login">
+    </form>
+    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+</body>
+</html>
+
+
+
+
+
+
+
+dashboard.html 
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to your dashboard, {{ username }}!</h1>
+    <p>You have successfully logged in.</p>
+    <p><a href="/logout">Logout</a></p>
+</body>
+</html>
+=======
+>>>>>>> 57456f10179ca69749cf53578f5d3497f3b56f56
